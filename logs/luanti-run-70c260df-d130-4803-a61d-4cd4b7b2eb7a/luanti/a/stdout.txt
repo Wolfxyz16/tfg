@@ -1,6 +1,0 @@
-[MOD] Voxel API loaded
-[*] Minetest using port 54439 to communicate with craftium
-
-[INFO] PyConn started in port 54439
-
-[INFO] Auto-kill signal received, exiting...

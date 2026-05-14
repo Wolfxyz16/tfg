@@ -1,7 +1,0 @@
-[MOD] Voxel API loaded
-[*] Minetest using port 36583 to communicate with craftium
-
-[INFO] PyConn started in port 36583
-
-taiga_ocean
-[INFO] Auto-kill signal received, exiting...
