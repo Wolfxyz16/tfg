@@ -1,1 +1,3 @@
 logs/
+kb/data/*
+!kb/data/main.pl
