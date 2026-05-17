@@ -20,9 +20,10 @@ create_world:
 	sed 's/{{GAME}}/$(GAME)/g' world.mt.template > $(WORLD_PATH)/world.mt
 
 populate:
+	rm --recursive --force $(CURDIR)/kb/data
 	luanti --server --worldname $(WORLD_NAME)
 	mkdir --parents $(CURDIR)/kb/data
-	cp --recursive $(LUANTI_MOD_DATA_DIR)/craftium_kb/kb/* $(CURDIR)/kb/data
+	cp $(LUANTI_MOD_DATA_DIR)/craftium_kb/kb/*.pl $(CURDIR)/kb/data
 
 clean:
 	rm --force $(LUANTI_MODS_DIR)/craftium_kb

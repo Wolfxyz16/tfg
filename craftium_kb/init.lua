@@ -13,6 +13,7 @@ local main = {
 	":- consult('tools.pl').",
 	":- consult('ores.pl').",
 	":- consult('decorations.pl').",
+	":- consult('crafts.pl').",
 	"",
 }
 
