@@ -17,6 +17,12 @@ local main = {
 	"",
 }
 
+core.register_on_joinplayer(function(player, _last_login)
+	local biome_data = core.get_biome_data(player:get_pos())
+	local biome_name = core.get_biome_name(biome_data["biome"])
+	core.log("bot placed at a " .. biome_name .. " biome")
+end)
+
 core.register_on_mods_loaded(function()
 	core.log("action", "mods loaded, creating knowledge base")
 

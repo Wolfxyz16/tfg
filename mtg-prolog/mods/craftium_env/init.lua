@@ -22,16 +22,25 @@ core.register_on_dieplayer(function(ObjectRef, reason)
 end)
 
 -- Executed when the player joins the game
-core.register_on_joinplayer(function(player, _last_login)
+core.register_on_joinplayer(function(agent, _last_login)
 	-- set timeofday to midday
 	core.set_timeofday(0.5)
 
 	-- Disable HUD elements
-	player:hud_set_flags({
+	agent:hud_set_flags({
 		hotbar = false,
 		crosshair = false,
 		healthbar = false,
 		chat = false,
+	})
+
+	agent:hud_add({
+		type = "text",
+		alignment = { x = 0, y = 0 },
+		offset = { x = 800, y = 100 },
+		size = { x = 2, y = 2 },
+		text = "task(collect, 'default:wood', [], [])",
+		style = 4,
 	})
 end)
 

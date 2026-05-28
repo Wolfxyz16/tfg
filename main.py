@@ -5,7 +5,7 @@ import janus_swi as janus
 from craftium import CraftiumEnv
 
 # import all the knowledge base to python
-janus.consult("./knowledge-base-simple/task.pro")
+janus.consult("./kb/main.pl")
 
 jask = janus.query_once("get_random_task(T), task_to_string(T, List)")
 
