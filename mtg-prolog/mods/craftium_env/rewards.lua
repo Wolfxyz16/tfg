@@ -1,0 +1,3 @@
+local rewards = {}
+
+return rewards

@@ -1,7 +1,8 @@
 -- get the task triplet
-local task_item = core.settings:get("task.item")
-local task_place = core.settings:get("task.place")
 local task_action = core.settings:get("task.action")
+local task_goal = core.settings:get("task.goal")
+local task_preconditions = core.settings:get("task.preconditions")
+local task_effects = core.settings:get("task.effects")
 
 task_place = core.get_biome_id(task_place)
 

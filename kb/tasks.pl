@@ -3,13 +3,26 @@
 % task(Action, Target, Preconditions, Effects).
 
 % COLLECT task
+% when the node has not a drop rule
 task(collect, Node, Preconditions, Effects) :-
   node(Node),
   tool(Tool),
   can_drop(Tool, Node),
+  spawns_in(Node, Biome),
   \+ drop(Node, _),
-  Preconditions = [has(Tool)],
+  Preconditions = [has(Tool), at(Biome)],
   Effects = [has(Node)].
+
+% when a node drops another item
+task(collect, DropItem, Preconditions, Effects) :-
+  node(Node),
+  drop(Node, DropItem),
+  spawns_in(Node, Biome),
+  tool(Tool),
+  can_drop(Tool, Node),
+  ore(_, _, Node, Min, Max),
+  Preconditions = [has(Tool), at(Biome), between(Min, Max)],
+  Effects = [has(DropItem)].
 
 
 % CRAFT task

@@ -13,8 +13,7 @@ spawns_in(Node, Biome) :-
 spawns_in(Node, Biome) :-
   node(Node),
   biome(Biome),
-  ore(Id, _, Node, _, _),
-  \+ ore_in_biome(Id, _).
+  once((ore(Id, _, Node, _, _), \+ ore_in_biome(Id, _))).
 
 spawns_in(Node, Biome) :-
   decoration(Id, Node, _, _),
@@ -33,3 +32,13 @@ can_drop(Tool, Node) :-
     required_drop_level(Rating, RequiredLevel),
     max_drop_level(Tool, MaxDropLevel),
     MaxDropLevel >= RequiredLevel.
+
+% A 4-tuple random task in string format
+get_random_task(ActionStr, GoalStr, PreconditionsStr, EffectsStr) :-
+  findall(task(A, B, C, D), task(A, B, C, D), TaskList),
+  random_member(TaskTerm, TaskList),
+  TaskTerm = task(Action, Goal, Preconditions, Effects),
+  atom_string(Action, ActionStr),
+  atom_string(Goal, GoalStr),
+  with_output_to(string(PreconditionsStr), format('~w', [Preconditions])),
+  with_output_to(string(EffectsStr), format('~w', [Effects])).

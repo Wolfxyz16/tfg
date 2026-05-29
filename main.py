@@ -1,20 +1,37 @@
 from pathlib import Path
 import numpy as np
 import janus_swi as janus
+import re
 
 from craftium import CraftiumEnv
+
+
+def string_to_array(text_str):
+    cleaned = text_str.replace("[", "").replace("]", "").strip()
+
+    if not cleaned:
+        return []
+
+    return [elem.strip() for elem in re.split(r"(?<=\)),\s*", cleaned)]
+
 
 # import all the knowledge base to python
 janus.consult("./kb/main.pl")
 
-jask = janus.query_once("get_random_task(T), task_to_string(T, List)")
-
-print(task.next)
+# jask = janus.query_once("get_random_task(T), task_to_string(T, List)")
+task = janus.query_once("get_random_task(Action, Goal, Preconditions, Effects)")
 
 # place is the registered name of the biome and the item is <modname:item>
 task_dict = {
-    "task": {"action": task["Action"], "place": task["Place"], "item": task["Item"]}
+    "action": task["Action"],
+    "goal": task["Goal"],
+    "preconditions": string_to_array(task["Preconditions"]),
+    "effects": string_to_array(task["Effects"]),
 }
+
+print(
+    f"task({task_dict['action']}, {task_dict['goal']}, {task_dict['preconditions']}, {task_dict['effects']})"
+)
 
 env = CraftiumEnv(
     env_dir="mtg-prolog",
