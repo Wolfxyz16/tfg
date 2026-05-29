@@ -4,28 +4,27 @@ local filepath = CRAFTIUM_DATA_PATH .. "/kb/biomes.pl"
 local utils = dofile(path .. "/utils.lua")
 
 local biome_table = {
-    ":- discontiguous biome/1.",
-    ":- discontiguous node_dust/2.",
-    ":- discontiguous node_top/2.",
-    ":- discontiguous node_filler/2.",
-    ":- discontiguous node_stone/2.",
-    ":- discontiguous node_water_top/2.",
-    ":- discontiguous node_water/2.",
-    ":- discontiguous node_riverbed/2.",
-    ":- discontiguous node_dungeon/2.",
-    ":- discontiguous node_dungeon_alt/2.",
-    ":- discontiguous node_dungeon_stair/2.",
-    ":- discontiguous y_max/2.",
-    ":- discontiguous y_min/2.",
-    ":- discontiguous heat/2.",
-    ":- discontiguous humidity/2.",
-    ":- discontiguous voronoi_weight/2.",
-    ""
+	":- discontiguous biome/1.",
+	":- discontiguous node_dust/2.",
+	":- discontiguous node_top/2.",
+	":- discontiguous node_filler/2.",
+	":- discontiguous node_stone/2.",
+	":- discontiguous node_water_top/2.",
+	":- discontiguous node_water/2.",
+	":- discontiguous node_riverbed/2.",
+	":- discontiguous node_dungeon/2.",
+	":- discontiguous node_dungeon_alt/2.",
+	":- discontiguous node_dungeon_stair/2.",
+	":- discontiguous y_max/2.",
+	":- discontiguous y_min/2.",
+	":- discontiguous heat/2.",
+	":- discontiguous humidity/2.",
+	":- discontiguous voronoi_weight/2.",
+	"",
 }
 
 for name, biome in pairs(core.registered_biomes) do
-
-  name = string.lower(name)
+	name = string.lower(name)
 
 	table.insert(biome_table, utils.build_fact("biome", name))
 
@@ -43,6 +42,10 @@ for name, biome in pairs(core.registered_biomes) do
 
 	if biome.node_stone ~= nil then
 		table.insert(biome_table, utils.build_fact("node_stone", name, biome.node_stone))
+	end
+
+	if biome.node_stone == nil then
+		table.insert(biome_table, utils.build_fact("node_stone", name, "default:stone"))
 	end
 
 	if biome.node_water_top ~= nil then

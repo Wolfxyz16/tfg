@@ -1,21 +1,10 @@
 -- get the task triplet
-local task_action = core.settings:get("task.action")
-local task_goal = core.settings:get("task.goal")
-local task_preconditions = core.settings:get("task.preconditions")
-local task_effects = core.settings:get("task.effects")
-
-task_place = core.get_biome_id(task_place)
-
-local reward_func = function(pos, oldnode, oldmetadata, digger)
-	local biome = core.get_biome_data(pos)
-
-	if biome["biome"] == task_place and digger:is_player() then
-		set_reward_once(1.0, 0.0)
-	end
-end
-
--- if item is digged, set reward to 1
-core.override_item("default:acacia_tree", { after_dig_node = reward_func }, {})
+local task = {
+	action = core.settings:get("task.action"),
+	goal = core.settings:get("task.goal"),
+	preconditions = core.settings:get("task.preconditions"),
+	effects = core.settings:get("task.effects"),
+}
 
 -- Turn on the termination flag if the agent dies
 core.register_on_dieplayer(function(ObjectRef, reason)

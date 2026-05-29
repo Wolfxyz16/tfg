@@ -1,25 +1,34 @@
 :- ['data/main'].
 :- ['tasks'].
 
+source(Node, Biome) :- node_top(Biome, Node).
+source(Node, Biome) :- node_filler(Biome, Node).
+source(Node, Biome) :- node_stone(Biome, Node).
+source(Node, Biome) :- node_riverbed(Biome, Node).
+source(Node, Biome) :- node_dungeon(Biome, Node).
+source(Node, Biome) :- node_dust(Biome, Node).
+source(Node, Biome) :- node_water_top(Biome, Node).
+
+ore_source(Node, Biome) :-
+    ore(Id, _, Node, _, _),
+    (ore_in_biome(Id, Biome) ; \+ ore_in_biome(Id, _)).
+
+decoration_source(Node, Biome) :-
+    decoration(Id, Node, _, _),
+    decoration_biome(Id, Biome).
+
 % spawns_in(?Node, ?Biome)
-% Node spawns in Biome if it matchs the ore_in_biome/2 rule
 spawns_in(Node, Biome) :-
-  node(Node),
-  biome(Biome),
-  ore(Id, _, Node, _, _),
-  ore_in_biome(Id, Biome).
+    distinct((Node, Biome), (
+        decoration_source(Node, Biome)
+        ;
+        ore_source(Node, Biome)
+        ;
+        source(Node, Biome)
+    )).
 
-% A node that is a ore and does not match ore_in_biome/2, spawns in every biome
-spawns_in(Node, Biome) :-
-  node(Node),
-  biome(Biome),
-  once((ore(Id, _, Node, _, _), \+ ore_in_biome(Id, _))).
-
-spawns_in(Node, Biome) :-
-  decoration(Id, Node, _, _),
-  node(Node),
-  biome(Biome),
-  decoration_biome(Id, Biome).
+can_naturally_spawn(Node) :-
+    once(spawns_in(Node, _)).
 
 % can_drop(?Tool, ?Node)
 % If the given tool will succesfuly break the node
@@ -33,8 +42,12 @@ can_drop(Tool, Node) :-
     max_drop_level(Tool, MaxDropLevel),
     MaxDropLevel >= RequiredLevel.
 
+total_tasks(N) :-
+    findall(task(A, B, C, D), task(A, B, C, D), TaskList),
+    length(TaskList, N).
+
 % A 4-tuple random task in string format
-get_random_task(ActionStr, GoalStr, PreconditionsStr, EffectsStr) :-
+get_random_task(task(ActionStr, GoalStr, PreconditionsStr, EffectsStr)) :-
   findall(task(A, B, C, D), task(A, B, C, D), TaskList),
   random_member(TaskTerm, TaskList),
   TaskTerm = task(Action, Goal, Preconditions, Effects),
