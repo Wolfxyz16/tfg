@@ -7,22 +7,22 @@
 task(collect, Node, Preconditions, Effects) :-
   node(Node),
   tool(Tool),
-  can_drop(Tool, Node),
-  can_naturally_spawn(Node),
+  can_break(Tool, Node),
+  spawns_in(Node, Biome),
   \+ drop(Node, _),
   \+ groups(Node, not_in_creative_inventory, 1),
-  Preconditions = [has(Tool)],
+  Preconditions = [has(Tool), at(Biome)],
   Effects = [has(Node)].
 
 % when a node drops another item
 task(collect, DropItem, Preconditions, Effects) :-
   node(Node),
   tool(Tool),
-  can_drop(Tool, Node),
+  can_break(Tool, Node),
   drop(Node, DropItem),
-  can_naturally_spawn(Node),
+  spawns_in(Node, Biome),
   \+ groups(Node, not_in_creative_inventory, 1),
-  Preconditions = [has(Tool), near(Node)],
+  Preconditions = [has(Tool), near(Node), at(Biome)],
   Effects = [has(DropItem)].
 
 

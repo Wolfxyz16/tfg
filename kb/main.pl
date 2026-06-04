@@ -14,39 +14,48 @@ ore_source(Node, Biome) :-
     (ore_in_biome(Id, Biome) ; \+ ore_in_biome(Id, _)).
 
 decoration_source(Node, Biome) :-
-    decoration(Id, Node, _, _),
+    deco_node(Id, Node),
+    \+ decoration_biome(Id, Biome),
+    biome(Biome).
+
+decoration_source(Node, Biome) :-
+    deco_node(Id, Node),
     decoration_biome(Id, Biome).
 
 % spawns_in(?Node, ?Biome)
 spawns_in(Node, Biome) :-
-    distinct((Node, Biome), (
-        decoration_source(Node, Biome)
-        ;
-        ore_source(Node, Biome)
-        ;
-        source(Node, Biome)
-    )).
+    decoration_source(Node, Biome).
+spawns_in(Node, Biome) :-
+    ore_source(Node, Biome).
+spawns_in(Node, Biome) :-
+    source(Node, Biome).
 
-can_naturally_spawn(Node) :-
-    once(spawns_in(Node, _)).
+% can_naturally_spawn(+Node)
+can_naturally_spawn(Node) :- spawns_in(Node, _).
 
-% can_drop(?Tool, ?Node)
+% can_break(?Tool, ?Node)
 % If the given tool will succesfuly break the node
-required_drop_level(3, 0).
-required_drop_level(2, 1).
-required_drop_level(1, 2).
-can_drop(Tool, Node) :-
+required_break(3, 0).
+required_break(2, 1).
+required_break(1, 2).
+can_break(Tool, Node) :-
     groups(Node, Group, Rating),
-    groupcaps_meta(Tool, Group, _, _),
-    required_drop_level(Rating, RequiredLevel),
-    max_drop_level(Tool, MaxDropLevel),
-    MaxDropLevel >= RequiredLevel.
+    groupcaps_meta(Tool, Group, _, MaxLevel),
+    MaxLevel >= Rating.
 
 total_tasks(N) :-
     findall(task(A, B, C, D), task(A, B, C, D), TaskList),
     length(TaskList, N).
 
+get_tasks(T, Preconditions) :-
+  T = task(_, _, Precs, _),
+  permutation(Precs, Preconditions).
+
+
 % A 4-tuple random task in string format
+get_random_task(ActionStr, GoalStr, PreconditionsStr, EffectsStr) :-
+  get_random_task(task(ActionStr, GoalStr, PreconditionsStr, EffectsStr)).
+
 get_random_task(task(ActionStr, GoalStr, PreconditionsStr, EffectsStr)) :-
   findall(task(A, B, C, D), task(A, B, C, D), TaskList),
   random_member(TaskTerm, TaskList),

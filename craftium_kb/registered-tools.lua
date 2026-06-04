@@ -50,7 +50,7 @@ for name, tool in pairs(core.registered_tools) do
 		if caps.groupcaps then
 			for gkey, gdata in pairs(caps.groupcaps) do
 				local uses = gdata.uses or 0 -- number of uses tool can be used in the group
-				local maxlevel = gdata.maxlevel or 0 -- maximum level which the tool can mine
+				local maxlevel = gdata.maxlevel or 99 -- maximum level which the tool can mine
 				table.insert(tool_table, utils.build_fact("groupcaps_meta", name, gkey, uses, maxlevel))
 
 				if gdata.times then

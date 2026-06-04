@@ -1,4 +1,7 @@
--- get the task triplet
+local modpath = core.get_modpath(core.get_current_modname())
+local rewards = dofile(modpath .. "/rewards.lua")
+
+-- get the task table
 local task = {
 	action = core.settings:get("task.action"),
 	goal = core.settings:get("task.goal"),
@@ -6,12 +9,14 @@ local task = {
 	effects = core.settings:get("task.effects"),
 }
 
+rewards[task.action](task)
+
 -- Turn on the termination flag if the agent dies
 core.register_on_dieplayer(function(ObjectRef, reason)
 	set_termination()
 end)
 
--- Executed when the player joins the game
+-- Executed when the agent joins the game
 core.register_on_joinplayer(function(agent, _last_login)
 	-- set timeofday to midday
 	core.set_timeofday(0.5)

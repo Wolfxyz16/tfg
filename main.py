@@ -1,5 +1,4 @@
 from pathlib import Path
-import numpy as np
 import janus_swi as janus
 import re
 
@@ -28,10 +27,6 @@ task_dict = {
     "preconditions": string_to_array(task["Preconditions"]),
     "effects": string_to_array(task["Effects"]),
 }
-
-print(
-    f"task({task_dict['action']}, {task_dict['goal']}, {task_dict['preconditions']}, {task_dict['effects']})"
-)
 
 env = CraftiumEnv(
     env_dir="mtg-prolog",
