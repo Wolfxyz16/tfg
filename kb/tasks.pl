@@ -1,54 +1,43 @@
-% we must define a list of preconditions+effects
+% =============================================================================
+% TASK ATOM INTERFACES
+% =============================================================================
+collect(Item) :- once(task(collect, Item, _, _)).
+explore(Biome) :- once(task(explore, Biome, _, _)).
+craft(Item) :- once(task(craft, Item, _, _)).
 
-% task(Action, Target, Preconditions, Effects).
+% Generic task wrapper
+task(task(A, B, C, D)) :- task(A, B, C, D).
 
-% COLLECT task
-% when the node has not a drop rule
-task(collect, Node, Preconditions, Effects) :-
-  node(Node),
-  tool(Tool),
-  can_break(Tool, Node),
-  spawns_in(Node, Biome),
-  \+ drop(Node, _),
-  \+ groups(Node, not_in_creative_inventory, 1),
-  Preconditions = [has(Tool), at(Biome)],
-  Effects = [has(Node)].
+% =============================================================================
+% COLLECT TASKS
+% =============================================================================
 
-% when a node drops another item
-task(collect, DropItem, Preconditions, Effects) :-
-  node(Node),
-  tool(Tool),
-  can_break(Tool, Node),
-  drop(Node, DropItem),
-  spawns_in(Node, Biome),
-  \+ groups(Node, not_in_creative_inventory, 1),
-  Preconditions = [has(Tool), near(Node), at(Biome)],
-  Effects = [has(DropItem)].
+% Case 1: Node drops itself (No drop rule exists)
+task(collect, Node, [has(Tool, 1), at(Biome)], [has(Node, 1)]) :-
+    node(Node),
+    \+ groups(Node, not_in_creative_inventory, 1),
+    \+ drop(Node, _),
+    spawns_in(Node, Biome),
+    can_break(Tool, Node).
 
+% Case 2: Node drops a different item (Drop rule exists)
+task(collect, DropItem, [has(Tool, 1), near(Node), at(Biome)], [has(DropItem, 1)]) :-
+    drop(Node, DropItem),
+    \+ groups(Node, not_in_creative_inventory, 1),
+    spawns_in(Node, Biome),
+    can_break(Tool, Node).
 
-% CRAFT task
-% Models a global crafting action. It can be performed anywhere as long as ingredients are present.
-task(craft, Item, Preconditions, Effects) :-
-    craft(Item, Yield, _, _),
-    required_materials(Item, Ingredients),
+% =============================================================================
+% EXPLORE TASKS
+% =============================================================================
+task(explore, Biome, [not(at(Biome))], [at(Biome)]) :-
+    biome(Biome).
 
-    % Preconditions: Only the required materials are needed (Anywhere)
-    maplist(to_has_precondition, Ingredients, Preconditions),
-    Effects = [has(Item, Yield)].
-
-% EXPLORE task
-% The agent must travel to another biome
-task(explore, Biome, Preconditions, Effects) :-
-  biome(Biome),
-
-  Preconditions = [not(at(Biome))],
-  Effects = [at(Biome)].
-
-% Helper predicates to build the 'has' terms
-to_has_precondition(Material-Count, has(Material, Count)).
-
-% Counts how many materials of each type are required for a craft
-required_materials(Item, GroupedMaterials) :-
-    craft(Item, _, _, FlatList),
-    msort(FlatList, SortedList),
-    clumped(SortedList, GroupedMaterials).
+% =============================================================================
+% CRAFT TASKS
+% =============================================================================
+task(craft, Item, Preconditions, [has(Item, Yield)]) :-
+    craft(Item, Yield, _, Ingredients),
+    msort(Ingredients, Sorted),
+    clumped(Sorted, Pairs),
+    findall(has(M, N), member(M-N, Pairs), Preconditions).
