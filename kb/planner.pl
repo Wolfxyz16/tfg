@@ -1,35 +1,34 @@
-% =============================================================================
-% PLANNER LOGIC: Pathfinding in State Space
-% =============================================================================
+% A = collect,
+% B = 'default:tree',
+% C = [has(hand, 1), at(deciduous_forest)],
+% D = [has('default:tree', 1)] 
 
-% Met_preconditions: ignores context (at/near/not) and focuses on resources.
-met_preconditions([], _).
-met_preconditions([has(Item, Q)|Rest], State) :-
-    member(has(Item, Q), State),
-    met_preconditions(Rest, State).
-met_preconditions([_|Rest], State) :- met_preconditions(Rest, State).
+% 1. Matching (con soporte de grupos)
+match(Goal, Effect) :- Goal == Effect, !.
+match(has(Group, _), has(Item, _)) :-
+    atomic_list_concat(['group', GroupName], ':', Group),
+    groups(Item, GroupName, _), !.
 
-% Executes a task and returns the updated state.
-perform_task(CurrentState, Task, NewState) :-
-    task(Action, Target, Preconditions, Effects),
-    Task = task(Action, Target),
-    met_preconditions(Preconditions, CurrentState),
-    append(CurrentState, Effects, Temp),
-    list_to_set(Temp, NewState).
+% 2. Solver (Depth-Limited)
+% Si Goal está en State, éxito inmediato.
+solve(Goal, State, [], _) :- 
+    member(E, State), match(Goal, E), !.
 
-% --- EXHAUSTIVE SEARCH ---
-% Explores all possibilities in the state space.
-find_all_paths(Goal, CurrentState, _, []) :-
-    member(Goal, CurrentState), !.
-find_all_paths(Goal, CurrentState, Visited, [Task|Rest]) :-
-    perform_task(CurrentState, Task, NewState),
-    \+ member(Task, Visited),
-    find_all_paths(Goal, NewState, [Task|Visited], Rest).
+% Si no está, intentamos buscar una tarea (solo si profundidad > 0)
+solve(Goal, State, [task(Action, Target)|PlanRest], Depth) :-
+    Depth > 0,
+    % Buscamos tareas que satisfagan el Goal
+    task(Action, Target, Pre, Effects),
+    member(Eff, Effects),
+    match(Goal, Eff),
+    
+    % Resolvemos prerrequisitos con profundidad reducida
+    NewDepth is Depth - 1,
+    solve_all(Pre, State, PlanRest, NewDepth).
 
-% --- OPTIMIZED SEARCH (SHORTEST PATH) ---
-% Uses iterative deepening to ensure the first found path is the shortest.
-shortest_path(Goal, StartState, Plan) :-
-    between(1, 20, Depth),          % Search for plans from 1 to 20 steps
-    length(Plan, Depth),            % Enforce current depth
-    find_all_paths(Goal, StartState, [], Plan),
-    !.                              % Cut: return only the shortest valid plan
+% 3. Gestión de prerrequisitos
+solve_all([], _, [], _).
+solve_all([Req|Rest], State, Plan, Depth) :-
+    solve(Req, State, Plan1, Depth),
+    solve_all(Rest, State, Plan2, Depth),
+    append(Plan1, Plan2, Plan).

@@ -1,4 +1,5 @@
 :- use_module(library(solution_sequences)).
+:- use_module(library(http/json)).
 
 :- ['data/main'].
 :- ['tasks'].
@@ -14,7 +15,7 @@ source(Node, Biome) :- node_water_top(Biome, Node).
 
 ore_source(Node, Biome) :-
     ore(Id, _, Node, _, _),
-    (ore_in_biome(Id, Biome) ; \+ ore_in_biome(Id, _)).
+    (ore_in_biome(Id, Biome) ; (\+ ore_in_biome(Id, _), biome(Biome))).
 
 decoration_source(Node, Biome) :-
     deco_node(Id, Node),
@@ -45,19 +46,19 @@ required_break(3, 0).
 required_break(2, 1).
 required_break(1, 2).
 can_break(Tool, Node) :-
-    groups(Node, Group, NodeRating),
-    groupcaps_meta(Tool, Group, _, ToolMaxLevel),
-    LevelDiff is ToolMaxLevel - NodeRating,
-    LevelDiff >= 0.
+    tool(Tool),
+    groups(Node, oddly_breakable_by_hand, _).
 
-total_tasks(N) :-
-    findall(task(A, B, C, D), task(A, B, C, D), TaskList),
-    length(TaskList, N).
+can_break(Tool, Node) :-
+    tool(Tool),
+    groups(Node, Group, Hardness),
+    groupcaps_meta(Tool, Group, _, MaxLevel),
+    MaxLevel >= Hardness.
 
-get_tasks(T, Preconditions) :-
-  T = task(_, _, Precs, _),
-  permutation(Precs, Preconditions).
-
+total_unique_tasks(N) :-
+    findall(Action-Target, task(Action, Target, _, _), RawList),
+    sort(RawList, UniqueList),
+    length(UniqueList, N).
 
 % A 4-tuple random task in string format
 get_random_task(ActionStr, GoalStr, PreconditionsStr, EffectsStr) :-
@@ -72,31 +73,29 @@ get_random_task(task(ActionStr, GoalStr, PreconditionsStr, EffectsStr)) :-
   with_output_to(string(PreconditionsStr), format('~w', [Preconditions])),
   with_output_to(string(EffectsStr), format('~w', [Effects])).
 
-% call it to create the the .dot file
-export_dot :-
-    setup_call_cleanup(
-        open('tasks_graph.dot', write, Stream),
-        (   % Cabecera del archivo DOT
-            format(Stream, 'digraph TaskDependencyGraph {~n', []),
-            format(Stream, '  node [shape=box, style=filled, color=lightblue, fontname="Courier"];~n', []),
-            
-            % Iteramos sobre cada dependencia real y única en el sistema
-            forall(
-                distinct([Action1, Target1, Action2, Target2, Resource],
-                    task_dependency(Action1, Target1, Action2, Target2, Resource)
-                ),
-                (   % Limpieza de prefijos de Minetest (ej: 'default:wood' -> 'wood')
-                    clean_name(Target1, CleanT1),
-                    clean_name(Target2, CleanT2),
-                    clean_name(Resource, CleanRes),
-                    
-                    % Escritura con la estructura exacta: "accion(objeto)"
-                    format(Stream, '  "~w(~w)" -> "~w(~w)" [label="~w"];~n', 
-                           [Action1, CleanT1, Action2, CleanT2, CleanRes])
-                )
+% --- EXPORTACIÓN ULTRA-ROBUSTA ---
+export_unique_graph :-
+    % 1. Sacamos la lista de pares únicos limpiamente
+    setof(Action-Target, Pre^Eff^task(Action, Target, Pre, Eff), UniqueTasks),
+    
+    % 2. Abrimos el archivo
+    open('unique_task_graph.json', write, Stream),
+    
+    % 3. Construimos los objetos JSON uno a uno asegurando que no se crucen variables
+    findall(TaskJSON,
+            (
+                member(A-T, UniqueTasks),
+                % Buscamos los datos reales de esa tarea
+                task(A, T, Pre, Eff),
+                % Convertimos las listas de condiciones a strings
+                maplist(term_string, Pre, PreStrings),
+                maplist(term_string, Eff, EffStrings),
+                % Estructuramos el diccionario para SWI-Prolog
+                TaskJSON = json([action=A, target=T, pre=PreStrings, eff=EffStrings])
             ),
-            
-            format(Stream, '}~n', [])
-        ),
-        close(Stream)
-    ).
+            JSONList),
+    
+    % 4. Escribimos y cerramos
+    json_write(Stream, JSONList),
+    close(Stream),
+    format('✅ Archivo unique_task_graph.json generado correctamente con tareas únicas.~n').
