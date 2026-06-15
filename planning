@@ -1,20 +1,22 @@
 - [X] build plannning
 
-- [ ] ODS template missing!
+- [X] ODS template missing!
+- [ ] ODS writting
 
 - [ ] finnish abstract writting
 
-- [ ] chapter 1, append a description of the project structure
+- [X] chapter 1, append a description of the project structure
 
-- [ ] correct chapter 2 writting
+- [X] correct chapter 2 writting
 
 - [ ] finnish and review chapter 4 writting  - A knowledge Base for open-ended environments
-- [ ] describe and illustrate prolog facts and rules
+- [X] describe and illustrate prolog facts and rules
 - [ ] take in-game screenshots of the open-ended tasks
+- [X] describe the translation from 4-tuple to Craftium reward function in lua
 
 - [ ] finnish and review chapter 5 writting - Task space analysis
-- [ ] decide which type of analysis
-- [ ] perform decided analysis
+- [X] decide which type of analysis
+- [X] perform decided analysis
 
 - [ ] finnish and review chapter 6 writting - Conclusion and future work
 - [ ] write a suitable conclusion tied to the abstract

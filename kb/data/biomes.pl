@@ -15,6 +15,51 @@
 :- discontiguous humidity/2.
 :- discontiguous voronoi_weight/2.
 
+biome(tundra).
+node_top(tundra, 'default:permafrost_with_stones').
+node_filler(tundra, 'default:permafrost').
+node_stone(tundra, 'default:stone').
+node_riverbed(tundra, 'default:gravel').
+node_dungeon(tundra, 'default:cobble').
+node_dungeon_alt(tundra, 'default:mossycobble').
+node_dungeon_stair(tundra, 'stairs:stair_cobble').
+y_max(tundra, 46).
+y_min(tundra, 2).
+heat(tundra, 0).
+humidity(tundra, 40).
+biome(tundra_beach).
+node_top(tundra_beach, 'default:gravel').
+node_filler(tundra_beach, 'default:gravel').
+node_stone(tundra_beach, 'default:stone').
+node_riverbed(tundra_beach, 'default:gravel').
+node_dungeon(tundra_beach, 'default:cobble').
+node_dungeon_alt(tundra_beach, 'default:mossycobble').
+node_dungeon_stair(tundra_beach, 'stairs:stair_cobble').
+y_max(tundra_beach, 1).
+y_min(tundra_beach, '-3').
+heat(tundra_beach, 0).
+humidity(tundra_beach, 40).
+biome(tundra_ocean).
+node_top(tundra_ocean, 'default:sand').
+node_filler(tundra_ocean, 'default:sand').
+node_stone(tundra_ocean, 'default:stone').
+node_riverbed(tundra_ocean, 'default:gravel').
+node_dungeon(tundra_ocean, 'default:cobble').
+node_dungeon_alt(tundra_ocean, 'default:mossycobble').
+node_dungeon_stair(tundra_ocean, 'stairs:stair_cobble').
+y_max(tundra_ocean, '-4').
+y_min(tundra_ocean, '-255').
+heat(tundra_ocean, 0).
+humidity(tundra_ocean, 40).
+biome(tundra_under).
+node_stone(tundra_under, 'default:stone').
+node_dungeon(tundra_under, 'default:cobble').
+node_dungeon_alt(tundra_under, 'default:mossycobble').
+node_dungeon_stair(tundra_under, 'stairs:stair_cobble').
+y_max(tundra_under, '-256').
+y_min(tundra_under, '-31000').
+heat(tundra_under, 0).
+humidity(tundra_under, 40).
 biome(taiga_ocean).
 node_dust(taiga_ocean, 'default:snow').
 node_top(taiga_ocean, 'default:sand').
@@ -230,6 +275,60 @@ y_max(savanna, 31000).
 y_min(savanna, 1).
 heat(savanna, 89).
 humidity(savanna, 42).
+biome(savanna_shore).
+node_top(savanna_shore, 'default:dry_dirt').
+node_filler(savanna_shore, 'default:dry_dirt').
+node_stone(savanna_shore, 'default:stone').
+node_riverbed(savanna_shore, 'default:sand').
+node_dungeon(savanna_shore, 'default:cobble').
+node_dungeon_alt(savanna_shore, 'default:mossycobble').
+node_dungeon_stair(savanna_shore, 'stairs:stair_cobble').
+y_max(savanna_shore, 0).
+y_min(savanna_shore, '-1').
+heat(savanna_shore, 89).
+humidity(savanna_shore, 42).
+biome(savanna_ocean).
+node_top(savanna_ocean, 'default:sand').
+node_filler(savanna_ocean, 'default:sand').
+node_stone(savanna_ocean, 'default:stone').
+node_riverbed(savanna_ocean, 'default:sand').
+node_dungeon(savanna_ocean, 'default:cobble').
+node_dungeon_alt(savanna_ocean, 'default:mossycobble').
+node_dungeon_stair(savanna_ocean, 'stairs:stair_cobble').
+y_max(savanna_ocean, '-2').
+y_min(savanna_ocean, '-255').
+heat(savanna_ocean, 89).
+humidity(savanna_ocean, 42).
+biome(savanna_under).
+node_stone(savanna_under, 'default:stone').
+node_dungeon(savanna_under, 'default:cobble').
+node_dungeon_alt(savanna_under, 'default:mossycobble').
+node_dungeon_stair(savanna_under, 'stairs:stair_cobble').
+y_max(savanna_under, '-256').
+y_min(savanna_under, '-31000').
+heat(savanna_under, 89).
+humidity(savanna_under, 42).
+biome(rainforest_ocean).
+node_top(rainforest_ocean, 'default:sand').
+node_filler(rainforest_ocean, 'default:sand').
+node_stone(rainforest_ocean, 'default:stone').
+node_riverbed(rainforest_ocean, 'default:sand').
+node_dungeon(rainforest_ocean, 'default:cobble').
+node_dungeon_alt(rainforest_ocean, 'default:mossycobble').
+node_dungeon_stair(rainforest_ocean, 'stairs:stair_cobble').
+y_max(rainforest_ocean, '-2').
+y_min(rainforest_ocean, '-255').
+heat(rainforest_ocean, 86).
+humidity(rainforest_ocean, 65).
+biome(rainforest_under).
+node_stone(rainforest_under, 'default:stone').
+node_dungeon(rainforest_under, 'default:cobble').
+node_dungeon_alt(rainforest_under, 'default:mossycobble').
+node_dungeon_stair(rainforest_under, 'stairs:stair_cobble').
+y_max(rainforest_under, '-256').
+y_min(rainforest_under, '-31000').
+heat(rainforest_under, 86).
+humidity(rainforest_under, 65).
 biome(cold_desert).
 node_top(cold_desert, 'default:silver_sand').
 node_filler(cold_desert, 'default:silver_sand').
@@ -327,39 +426,30 @@ y_max(deciduous_forest_shore, 0).
 y_min(deciduous_forest_shore, '-1').
 heat(deciduous_forest_shore, 60).
 humidity(deciduous_forest_shore, 68).
-biome(savanna_ocean).
-node_top(savanna_ocean, 'default:sand').
-node_filler(savanna_ocean, 'default:sand').
-node_stone(savanna_ocean, 'default:stone').
-node_riverbed(savanna_ocean, 'default:sand').
-node_dungeon(savanna_ocean, 'default:cobble').
-node_dungeon_alt(savanna_ocean, 'default:mossycobble').
-node_dungeon_stair(savanna_ocean, 'stairs:stair_cobble').
-y_max(savanna_ocean, '-2').
-y_min(savanna_ocean, '-255').
-heat(savanna_ocean, 89).
-humidity(savanna_ocean, 42).
-biome(savanna_under).
-node_stone(savanna_under, 'default:stone').
-node_dungeon(savanna_under, 'default:cobble').
-node_dungeon_alt(savanna_under, 'default:mossycobble').
-node_dungeon_stair(savanna_under, 'stairs:stair_cobble').
-y_max(savanna_under, '-256').
-y_min(savanna_under, '-31000').
-heat(savanna_under, 89).
-humidity(savanna_under, 42).
-biome(rainforest_ocean).
-node_top(rainforest_ocean, 'default:sand').
-node_filler(rainforest_ocean, 'default:sand').
-node_stone(rainforest_ocean, 'default:stone').
-node_riverbed(rainforest_ocean, 'default:sand').
-node_dungeon(rainforest_ocean, 'default:cobble').
-node_dungeon_alt(rainforest_ocean, 'default:mossycobble').
-node_dungeon_stair(rainforest_ocean, 'stairs:stair_cobble').
-y_max(rainforest_ocean, '-2').
-y_min(rainforest_ocean, '-255').
-heat(rainforest_ocean, 86).
-humidity(rainforest_ocean, 65).
+biome(rainforest).
+node_top(rainforest, 'default:dirt_with_rainforest_litter').
+node_filler(rainforest, 'default:dirt').
+node_stone(rainforest, 'default:stone').
+node_riverbed(rainforest, 'default:sand').
+node_dungeon(rainforest, 'default:cobble').
+node_dungeon_alt(rainforest, 'default:mossycobble').
+node_dungeon_stair(rainforest, 'stairs:stair_cobble').
+y_max(rainforest, 31000).
+y_min(rainforest, 1).
+heat(rainforest, 86).
+humidity(rainforest, 65).
+biome(rainforest_swamp).
+node_top(rainforest_swamp, 'default:dirt').
+node_filler(rainforest_swamp, 'default:dirt').
+node_stone(rainforest_swamp, 'default:stone').
+node_riverbed(rainforest_swamp, 'default:sand').
+node_dungeon(rainforest_swamp, 'default:cobble').
+node_dungeon_alt(rainforest_swamp, 'default:mossycobble').
+node_dungeon_stair(rainforest_swamp, 'stairs:stair_cobble').
+y_max(rainforest_swamp, 0).
+y_min(rainforest_swamp, '-1').
+heat(rainforest_swamp, 86).
+humidity(rainforest_swamp, 65).
 biome(icesheet).
 node_dust(icesheet, 'default:snowblock').
 node_top(icesheet, 'default:snowblock').
@@ -373,15 +463,6 @@ y_max(icesheet, 31000).
 y_min(icesheet, '-8').
 heat(icesheet, 0).
 humidity(icesheet, 73).
-biome(rainforest_under).
-node_stone(rainforest_under, 'default:stone').
-node_dungeon(rainforest_under, 'default:cobble').
-node_dungeon_alt(rainforest_under, 'default:mossycobble').
-node_dungeon_stair(rainforest_under, 'stairs:stair_cobble').
-y_max(rainforest_under, '-256').
-y_min(rainforest_under, '-31000').
-heat(rainforest_under, 86).
-humidity(rainforest_under, 65).
 biome(icesheet_ocean).
 node_dust(icesheet_ocean, 'default:snowblock').
 node_top(icesheet_ocean, 'default:sand').
@@ -395,30 +476,6 @@ y_max(icesheet_ocean, '-9').
 y_min(icesheet_ocean, '-255').
 heat(icesheet_ocean, 0).
 humidity(icesheet_ocean, 73).
-biome(rainforest_swamp).
-node_top(rainforest_swamp, 'default:dirt').
-node_filler(rainforest_swamp, 'default:dirt').
-node_stone(rainforest_swamp, 'default:stone').
-node_riverbed(rainforest_swamp, 'default:sand').
-node_dungeon(rainforest_swamp, 'default:cobble').
-node_dungeon_alt(rainforest_swamp, 'default:mossycobble').
-node_dungeon_stair(rainforest_swamp, 'stairs:stair_cobble').
-y_max(rainforest_swamp, 0).
-y_min(rainforest_swamp, '-1').
-heat(rainforest_swamp, 86).
-humidity(rainforest_swamp, 65).
-biome(rainforest).
-node_top(rainforest, 'default:dirt_with_rainforest_litter').
-node_filler(rainforest, 'default:dirt').
-node_stone(rainforest, 'default:stone').
-node_riverbed(rainforest, 'default:sand').
-node_dungeon(rainforest, 'default:cobble').
-node_dungeon_alt(rainforest, 'default:mossycobble').
-node_dungeon_stair(rainforest, 'stairs:stair_cobble').
-y_max(rainforest, 31000).
-y_min(rainforest, 1).
-heat(rainforest, 86).
-humidity(rainforest, 65).
 biome(icesheet_under).
 node_stone(icesheet_under, 'default:stone').
 node_dungeon(icesheet_under, 'default:cobble').
@@ -439,60 +496,3 @@ y_max(tundra_highland, 31000).
 y_min(tundra_highland, 47).
 heat(tundra_highland, 0).
 humidity(tundra_highland, 40).
-biome(tundra).
-node_top(tundra, 'default:permafrost_with_stones').
-node_filler(tundra, 'default:permafrost').
-node_stone(tundra, 'default:stone').
-node_riverbed(tundra, 'default:gravel').
-node_dungeon(tundra, 'default:cobble').
-node_dungeon_alt(tundra, 'default:mossycobble').
-node_dungeon_stair(tundra, 'stairs:stair_cobble').
-y_max(tundra, 46).
-y_min(tundra, 2).
-heat(tundra, 0).
-humidity(tundra, 40).
-biome(savanna_shore).
-node_top(savanna_shore, 'default:dry_dirt').
-node_filler(savanna_shore, 'default:dry_dirt').
-node_stone(savanna_shore, 'default:stone').
-node_riverbed(savanna_shore, 'default:sand').
-node_dungeon(savanna_shore, 'default:cobble').
-node_dungeon_alt(savanna_shore, 'default:mossycobble').
-node_dungeon_stair(savanna_shore, 'stairs:stair_cobble').
-y_max(savanna_shore, 0).
-y_min(savanna_shore, '-1').
-heat(savanna_shore, 89).
-humidity(savanna_shore, 42).
-biome(tundra_beach).
-node_top(tundra_beach, 'default:gravel').
-node_filler(tundra_beach, 'default:gravel').
-node_stone(tundra_beach, 'default:stone').
-node_riverbed(tundra_beach, 'default:gravel').
-node_dungeon(tundra_beach, 'default:cobble').
-node_dungeon_alt(tundra_beach, 'default:mossycobble').
-node_dungeon_stair(tundra_beach, 'stairs:stair_cobble').
-y_max(tundra_beach, 1).
-y_min(tundra_beach, '-3').
-heat(tundra_beach, 0).
-humidity(tundra_beach, 40).
-biome(tundra_ocean).
-node_top(tundra_ocean, 'default:sand').
-node_filler(tundra_ocean, 'default:sand').
-node_stone(tundra_ocean, 'default:stone').
-node_riverbed(tundra_ocean, 'default:gravel').
-node_dungeon(tundra_ocean, 'default:cobble').
-node_dungeon_alt(tundra_ocean, 'default:mossycobble').
-node_dungeon_stair(tundra_ocean, 'stairs:stair_cobble').
-y_max(tundra_ocean, '-4').
-y_min(tundra_ocean, '-255').
-heat(tundra_ocean, 0).
-humidity(tundra_ocean, 40).
-biome(tundra_under).
-node_stone(tundra_under, 'default:stone').
-node_dungeon(tundra_under, 'default:cobble').
-node_dungeon_alt(tundra_under, 'default:mossycobble').
-node_dungeon_stair(tundra_under, 'stairs:stair_cobble').
-y_max(tundra_under, '-256').
-y_min(tundra_under, '-31000').
-heat(tundra_under, 0).
-humidity(tundra_under, 40).

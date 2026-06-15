@@ -1,9 +1,15 @@
 :- use_module(library(solution_sequences)).
 :- use_module(library(http/json)).
 
+% for performance generation
+:- table task/4.
+:- table spawns_in/2.
+:- table can_break/2.
+
 :- ['data/main'].
 :- ['tasks'].
 :- ['planner'].
+:- ['world_model'].
 
 source(Node, Biome) :- node_top(Biome, Node).
 source(Node, Biome) :- node_filler(Biome, Node).
@@ -17,25 +23,21 @@ ore_source(Node, Biome) :-
     ore(Id, _, Node, _, _),
     (ore_in_biome(Id, Biome) ; (\+ ore_in_biome(Id, _), biome(Biome))).
 
+% the pair node-biome can be repeated in decorations
 decoration_source(Node, Biome) :-
-    deco_node(Id, Node),
-    \+ decoration_biome(Id, Biome),
-    biome(Biome).
-
-decoration_source(Node, Biome) :-
-    deco_node(Id, Node),
-    decoration_biome(Id, Biome).
+    distinct([Node, Biome], (
+        deco_node(Id, Node),
+        (   decoration_biome(Id, Biome)
+        ;   (\+ decoration_biome(Id, _), biome(Biome))
+        )
+    )).
 
 % spawns_in(?Node, ?Biome)
-spawns_in_raw(Node, Biome) :-
-    decoration_source(Node, Biome).
-spawns_in_raw(Node, Biome) :-
-    ore_source(Node, Biome).
-spawns_in_raw(Node, Biome) :-
-    source(Node, Biome).
+spawns_in_raw(Node, Biome) :- decoration_source(Node, Biome).
+spawns_in_raw(Node, Biome) :- ore_source(Node, Biome).
+spawns_in_raw(Node, Biome) :- source(Node, Biome).
 
-spawns_in(Node, Biome) :-
-    distinct(Biome, spawns_in_raw(Node, Biome)).
+spawns_in(Node, Biome) :- spawns_in_raw(Node, Biome).
 
 % can_naturally_spawn(+Node)
 can_naturally_spawn(Node) :- once(spawns_in(Node, _)).
@@ -53,49 +55,89 @@ can_break(Tool, Node) :-
     tool(Tool),
     groups(Node, Group, Hardness),
     groupcaps_meta(Tool, Group, _, MaxLevel),
-    MaxLevel >= Hardness.
+    required_break(Hardness, ReqLevel),
+    MaxLevel >= ReqLevel.
 
-total_unique_tasks(N) :-
-    findall(Action-Target, task(Action, Target, _, _), RawList),
-    sort(RawList, UniqueList),
-    length(UniqueList, N).
+% =============================================================================
+% BIOME RESTRICTION HELPERS
+% =============================================================================
+
+% Checks if a node has explicit biome constraints in the scraped facts
+is_biome_restricted(Node) :-
+    deco_node(Id, Node),
+    decoration_biome(Id, _).
+
+is_biome_restricted(Node) :-
+    ore(Id, _, Node, _, _),
+    ore_in_biome(Id, _).
+
+
+% =======================================================
+
+total_unique_tasks(N) :- aggregate_all(count, task(_,_,_,_), N).
 
 % A 4-tuple random task in string format
+% Interfaz de entrada
 get_random_task(ActionStr, GoalStr, PreconditionsStr, EffectsStr) :-
-  get_random_task(task(ActionStr, GoalStr, PreconditionsStr, EffectsStr)).
+    get_random_task(task(ActionStr, GoalStr, PreconditionsStr, EffectsStr)).
 
 get_random_task(task(ActionStr, GoalStr, PreconditionsStr, EffectsStr)) :-
-  findall(task(A, B, C, D), task(A, B, C, D), TaskList),
-  random_member(TaskTerm, TaskList),
-  TaskTerm = task(Action, Goal, Preconditions, Effects),
-  atom_string(Action, ActionStr),
-  atom_string(Goal, GoalStr),
-  with_output_to(string(PreconditionsStr), format('~w', [Preconditions])),
-  with_output_to(string(EffectsStr), format('~w', [Effects])).
+    findall(task(A, B, C, D), task(A, B, C, D), TaskList),
+    random_member(task(Action, Goal, Preconditions, Effects), TaskList),
+    atom_string(Action, ActionStr),
+    atom_string(Goal, GoalStr),
+    term_string(Preconditions, PreconditionsStr),
+    term_string(Effects, EffectsStr).
 
-% --- EXPORTACIÓN ULTRA-ROBUSTA ---
-export_unique_graph :-
-    % 1. Sacamos la lista de pares únicos limpiamente
-    setof(Action-Target, Pre^Eff^task(Action, Target, Pre, Eff), UniqueTasks),
-    
-    % 2. Abrimos el archivo
-    open('unique_task_graph.json', write, Stream),
-    
-    % 3. Construimos los objetos JSON uno a uno asegurando que no se crucen variables
-    findall(TaskJSON,
-            (
-                member(A-T, UniqueTasks),
-                % Buscamos los datos reales de esa tarea
-                task(A, T, Pre, Eff),
-                % Convertimos las listas de condiciones a strings
-                maplist(term_string, Pre, PreStrings),
-                maplist(term_string, Eff, EffStrings),
-                % Estructuramos el diccionario para SWI-Prolog
-                TaskJSON = json([action=A, target=T, pre=PreStrings, eff=EffStrings])
+% =======================================================
+export_groups :-
+    open('groups.json', write, Stream),
+    write(Stream, '['), nl(Stream),
+    nb_setval(first_group, true),
+    forall(
+        distinct([Item, Group], groups(Item, Group, 1)),
+        (   (   nb_getval(first_group, true)
+            ->  nb_setval(first_group, false)
+            ;   write(Stream, ',')
             ),
-            JSONList),
-    
-    % 4. Escribimos y cerramos
-    json_write(Stream, JSONList),
+            format(Stream, '{"item": "~w", "group": "~w"}', [Item, Group]),
+            nl(Stream)
+        )
+    ),
+    write(Stream, ']'),
     close(Stream),
-    format('✅ Archivo unique_task_graph.json generado correctamente con tareas únicas.~n').
+    format('Groups exported.~n').
+
+export_andor_graph :-
+    open('task_instances.json', write, Stream),
+    write(Stream, '['), nl(Stream),
+    nb_setval(inst_id, 0),
+    forall(
+        task(Action, Target, Pre, Eff),
+        (
+            % Get and increment the instance counter
+            nb_getval(inst_id, Id),
+            Id1 is Id + 1,
+            nb_setval(inst_id, Id1),
+
+            % Comma separator for all entries except the first
+            ( Id > 0 -> write(Stream, ',') ; true ),
+
+            % Serialize preconditions and effects as strings
+            maplist(term_string, Pre, PreStrings),
+            maplist(term_string, Eff, EffStrings),
+
+            % Write one JSON object per task/4 solution
+            Dict = _{ id: Id,
+                      action: Action,
+                      target: Target,
+                      pre: PreStrings,
+                      eff: EffStrings },
+            json_write_dict(Stream, Dict),
+            nl(Stream)
+        )
+    ),
+    write(Stream, ']'),
+    close(Stream),
+    nb_getval(inst_id, Total),
+    format('Exported ~w task instances.~n', [Total]).

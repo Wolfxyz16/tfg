@@ -9,8 +9,6 @@ local task = {
 	effects = core.settings:get("task.effects"),
 }
 
-rewards[task.action](task)
-
 -- Turn on the termination flag if the agent dies
 core.register_on_dieplayer(function(ObjectRef, reason)
 	set_termination()
@@ -18,6 +16,10 @@ end)
 
 -- Executed when the agent joins the game
 core.register_on_joinplayer(function(agent, _last_login)
+	-- local inv = agent:get_inventory()
+	-- inv:set_stack("main", 1, ItemStack("default:wood 3"))
+	-- inv:set_stack("main", 2, ItemStack("default:stick 2"))
+
 	-- set timeofday to midday
 	core.set_timeofday(0.5)
 
@@ -26,17 +28,13 @@ core.register_on_joinplayer(function(agent, _last_login)
 		hotbar = false,
 		crosshair = false,
 		healthbar = false,
-		chat = false,
+		chat = true,
 	})
 
-	agent:hud_add({
-		type = "text",
-		alignment = { x = 0, y = 0 },
-		offset = { x = 800, y = 100 },
-		size = { x = 2, y = 2 },
-		text = "task(collect, 'default:wood', [], [])",
-		style = 4,
-	})
+	core.chat_send_player(agent:get_player_name(), core.colorize("#CA6857", "Generated task: ") .. rewards.format(task))
+
+	-- load reward function when the player has spawned
+	rewards[task.action](task)
 end)
 
 core.register_globalstep(function(dtime)

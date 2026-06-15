@@ -1,5 +1,12 @@
 local rewards = {}
 
+-- formats the task into string
+rewards.format = function(t)
+	local pre = t.preconditions or "[]"
+	local eff = t.effects or "[]"
+	return string.format("task(%s, '%s',\n  pre:  %s\n  eff:  %s\n)", t.action or "?", t.goal or "?", pre, eff)
+end
+
 rewards.collect = function(task)
 	local node = task.goal
 

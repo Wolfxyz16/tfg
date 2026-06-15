@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2026-06-12">
+    <creator>NetworkX 3.6.1</creator>
+  </meta>
+  <graph defaultedgetype="directed" mode="static" name="">
+    <attributes mode="static" class="node">
+      <attribute id="0" title="kind" type="string" />
+      <attribute id="1" title="action" type="string" />
+      <attribute id="2" title="step" type="long" />
+    </attributes>
+    <nodes>
+      <node id="collect(default:diamond)" label="default:diamond">
+        <attvalues>
+          <attvalue for="0" value="task" />
+          <attvalue for="1" value="collect" />
+          <attvalue for="2" value="10" />
+        </attvalues>
+      </node>
+      <node id="collect(default:tree)" label="default:tree">
+        <attvalues>
+          <attvalue for="0" value="task" />
+          <attvalue for="1" value="collect" />
+          <attvalue for="2" value="1" />
+        </attvalues>
+      </node>
+      <node id="collect(default:iron_lump)" label="default:iron_lump">
+        <attvalues>
+          <attvalue for="0" value="task" />
+          <attvalue for="1" value="collect" />
+          <attvalue for="2" value="7" />
+        </attvalues>
+      </node>
+      <node id="craft(default:stick)" label="default:stick">
+        <attvalues>
+          <attvalue for="0" value="task" />
+          <attvalue for="1" value="craft" />
+          <attvalue for="2" value="5" />
+        </attvalues>
+      </node>
+      <node id="collect(default:bush_stem)" label="default:bush_stem">
+        <attvalues>
+          <attvalue for="0" value="task" />
+          <attvalue for="1" value="collect" />
+          <attvalue for="2" value="3" />
+        </attvalues>
+      </node>
+      <node id="craft(default:wood)" label="default:wood">
+        <attvalues>
+          <attvalue for="0" value="task" />
+          <attvalue for="1" value="craft" />
+          <attvalue for="2" value="4" />
+        </attvalues>
+      </node>
+      <node id="explore(deciduous_forest)" label="deciduous_forest">
+        <attvalues>
+          <attvalue for="0" value="task" />
+          <attvalue for="1" value="explore" />
+          <attvalue for="2" value="2" />
+        </attvalues>
+      </node>
+      <node id="craft(default:pick_steel)" label="default:pick_steel">
+        <attvalues>
+          <attvalue for="0" value="task" />
+          <attvalue for="1" value="craft" />
+          <attvalue for="2" value="9" />
+        </attvalues>
+      </node>
+      <node id="craft(default:pick_wood)" label="default:pick_wood">
+        <attvalues>
+          <attvalue for="0" value="task" />
+          <attvalue for="1" value="craft" />
+          <attvalue for="2" value="6" />
+        </attvalues>
+      </node>
+      <node id="craft(default:steel_ingot)" label="default:steel_ingot">
+        <attvalues>
+          <attvalue for="0" value="task" />
+          <attvalue for="1" value="craft" />
+          <attvalue for="2" value="8" />
+        </attvalues>
+      </node>
+    </nodes>
+    <edges>
+      <edge source="collect(default:iron_lump)" target="craft(default:steel_ingot)" id="0" />
+      <edge source="craft(default:stick)" target="craft(default:pick_wood)" id="1" />
+      <edge source="craft(default:stick)" target="craft(default:pick_steel)" id="2" />
+      <edge source="collect(default:bush_stem)" target="craft(default:wood)" id="3" />
+      <edge source="craft(default:wood)" target="craft(default:pick_wood)" id="4" />
+      <edge source="craft(default:wood)" target="craft(default:stick)" id="5" />
+      <edge source="explore(deciduous_forest)" target="collect(default:bush_stem)" id="6" />
+      <edge source="craft(default:pick_steel)" target="collect(default:diamond)" id="7" />
+      <edge source="craft(default:pick_wood)" target="collect(default:iron_lump)" id="8" />
+      <edge source="craft(default:steel_ingot)" target="craft(default:pick_steel)" id="9" />
+    </edges>
+  </graph>
+</gexf>
