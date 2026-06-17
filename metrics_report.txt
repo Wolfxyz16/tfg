@@ -1,0 +1,39 @@
+======================================================================
+  TASK SPACE METRICS  (Chapter 5)
+======================================================================
+
+[ VASTNESS ]
+  Task instantiations : 1282   {'explore': 43, 'craft': 439, 'collect': 800}
+  Task objectives     : 448   {'explore': 43, 'craft': 337, 'collect': 68}
+                        ({'explore': 9.6, 'craft': 75.2, 'collect': 15.2})
+  Preconditions per instantiation:
+    craft    mean 1.251  max 6
+    collect  mean 1.705  max 2
+    explore  mean    0  max 0
+    widest: craft(map:mapping_kit) -> 6 preconditions
+  Effect arity distribution: {1: 1282}
+  Contextual density (instantiations per objective):
+    craft    337 obj ->  439 inst  (mean 1.3, max 4)
+    collect   68 obj ->  800 inst  (mean 11.76, max 63)
+    explore   43 obj ->   43 inst  (mean 1, max 1)
+    densest collect objective: default:dirt (63 contexts)
+
+[ TOPOLOGY ]
+  Full AND/OR graph   : 1739 nodes, 3248 edges (457 task, 1282 instance)
+  Objective projection: 448 nodes, 1590 edges, mean out-degree 3.55
+  Connectivity        : largest component 424 (94.6%), 17 small fragments
+  Cycles              : 23 loops, 137 objectives (30.6%), largest 47
+  Acyclic backbone    : 311 (69.4%)
+  Condensation DAG    : 334 nodes, 838 edges, longest chain 13
+  Top objective hubs (out-degree):
+     45  craft(default:stick)
+     31  craft(default:sword_mese)
+     31  craft(default:sword_diamond)
+     31  craft(default:sword_wood)
+     31  craft(default:sword_bronze)
+
+[ DEPTH / CURRICULUM ]
+  Depth distribution  : {0: 56, 1: 118, 2: 151, 3: 109, 4: 14}
+  Mean depth          : 1.79  by action {'craft': 2.14, 'collect': 1.19, 'explore': 0}
+
+======================================================================
